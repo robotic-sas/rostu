@@ -1,0 +1,4 @@
+<launch>
+	<!-- <node pkg="rostu_v2" type="rostu_vel_mul" name="rostu_vel_mul" /> -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find rostu_gs)/cfg/rviz_navigation_teb.rviz"/>
+</launch>

@@ -1,0 +1,34 @@
+
+<launch>
+	<node pkg="rostu_simulation" type="field" name="field" />
+	<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
+
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+  	<rosparam file="$(find rostu_simulation)/cfg/omnidir/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	 	<rosparam file="$(find rostu_simulation)/cfg/omnidir/costmap_common_params.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find rostu_simulation)/cfg/omnidir/local_costmap_params.yaml" command="load" />
+		<rosparam file="$(find rostu_simulation)/cfg/omnidir/global_costmap_params.yaml" command="load" />
+		<rosparam file="$(find rostu_simulation)/cfg/omnidir/teb_local_planner_params.yaml" command="load" />
+
+		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+		<param name="controller_frequency" value="10.0" />
+		<param name="controller_patience" value="30.0" />
+	</node>
+
+	<node pkg="amcl" type="amcl" name="amcl" output="screen">
+		<rosparam file="$(find rostu_simulation)/cfg/amcl_params.yaml" command="load" />
+
+    <param name="odom_model_type"		value="omni"/>
+
+    <param name="initial_pose_x"            value="0"/>
+		<param name="initial_pose_y"            value="0"/>
+		<param name="initial_pose_a"            value="0"/>
+	</node>
+
+	<node name="map_server" pkg="map_server" type="map_server" args="$(find rostu_simulation)/maps/field.yaml" output="screen">
+		<param name="frame_id" value="/map"/>
+	</node>
+
+	<node name="rostu_gui" pkg="rostu_gui" type="rostuUi.py" />
+	<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rostu_simulation)/cfg/rviz_navigation_teb.rviz"/> -->
+</launch>

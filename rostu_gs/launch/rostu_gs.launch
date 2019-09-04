@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="rostu_gs" type="rostu_referee_listener" name="rostu_gs_referee_listener" output="screen"/>
+</launch>

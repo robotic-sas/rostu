@@ -1,0 +1,5 @@
+<launch>
+	<node pkg="rostu_goal_keeper" type="rostu_camera_pub" name="rostu_camera_pub" />
+  <node pkg="rostu_goal_keeper" type="rostu_line_tracking" name="rostu_line_tracking" />
+  <node pkg="rostu_goal_keeper" type="rostu_goalkeeper_navigation" name="rostu_goalkeeper_navigation" />
+</launch>

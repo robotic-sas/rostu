@@ -1,0 +1,49 @@
+
+<launch>
+	<node pkg="rosserial_python" type="serial_node.py" name="controller_player1">
+		<param name="port"	value="/dev/controller_serial" />
+		<param name="baud"	value="57600" />
+	</node>
+	
+	<node pkg="rosserial_python" type="serial_node.py" name="kicker_player1">
+		<param name="port"      value="/dev/kicker_serial" />
+                <param name="baud"      value="57600" />
+	</node>
+
+	<node pkg="rostu_v2" type="rostu_vel_mul" name="rostu_vel_mul" />
+	<node pkg="rostu_v2" type="rostu_camera_read" name="rostu_camera_pub" />
+	<node pkg="rostu_v2" type="rostu_line_tracking" name="rostu_line_tracking" />
+	<node pkg="rostu_v2" type="rostu_ball_tracking" name="rostu_ball_tracking" />
+	<node pkg="rostu_v2" type="rostu_navigation" name="rostu_navigation" output="screen" />
+	<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" output="screen"/>
+
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+  	<rosparam file="$(find rostu_v2)/cfg/omnidir/costmap_common_params.yaml" command="load" ns="global_costmap" />
+	 	<rosparam file="$(find rostu_v2)/cfg/omnidir/costmap_common_params.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find rostu_v2)/cfg/omnidir/local_costmap_params.yaml" command="load" />
+		<rosparam file="$(find rostu_v2)/cfg/omnidir/global_costmap_params.yaml" command="load" />
+		<rosparam file="$(find rostu_v2)/cfg/omnidir/teb_local_planner_params.yaml" command="load" />
+
+		<param name="base_global_planner" value="global_planner/GlobalPlanner" />
+		<param name="planner_frequency" value="1.0" />
+		<param name="planner_patience" value="5.0" />
+
+		<param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+		<param name="controller_frequency" value="20.0" />
+		<param name="controller_patience" value="30.0" />
+	</node>
+
+	<node pkg="amcl" type="amcl" name="amcl" output="screen">
+		<rosparam file="$(find rostu_v2)/cfg/amcl_params.yaml" command="load" />
+
+    <param name="odom_model_type"		value="omni-corrected"/>
+
+    <param name="initial_pose_x"            value="9.75"/>
+		<param name="initial_pose_y"            value="3.875"/>
+		<param name="initial_pose_a"            value="0"/>
+	</node>
+
+	<node name="map_server" pkg="map_server" type="map_server" args="$(find rostu_v2)/maps/field.yaml" output="screen">
+		<param name="frame_id" value="/map"/>
+	</node>
+</launch>

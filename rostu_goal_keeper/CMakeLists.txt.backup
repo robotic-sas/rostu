@@ -1,0 +1,62 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(rostu_goal_keeper)
+
+add_compile_options(-std=c++11)
+
+find_package(catkin REQUIRED COMPONENTS
+  genmsg
+  message_generation
+  roscpp
+  roslib
+  cv_bridge
+  image_transport
+)
+
+find_package(OpenCV REQUIRED)
+
+add_message_files(
+  FILES
+  LineCoor.msg
+)
+
+generate_messages(
+
+)
+
+catkin_package(
+  CATKIN_DEPENDS message_runtime
+)
+
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+)
+
+add_executable(rostu_camera_pub src/rostu_camera_read.cpp)
+add_executable(rostu_line_tracking src/rostu_line_tracking.cpp)
+add_executable(rostu_calibration src/rostu_calibration.cpp)
+add_executable(rostu_goalkeeper_navigation src/rostu_goalkeeper_navigation.cpp)
+
+target_link_libraries(rostu_camera_pub
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+target_link_libraries(rostu_line_tracking
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  yaml-cpp
+)
+
+target_link_libraries(rostu_calibration
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  yaml-cpp
+)
+
+target_link_libraries(rostu_goalkeeper_navigation
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  yaml-cpp
+)
